@@ -28,5 +28,12 @@ namespace LunchService.Controllers
         {
             users.Add(user);
         }
+
+        // DELETE api/users/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            users.Remove(id);
+        }
     }
 }
