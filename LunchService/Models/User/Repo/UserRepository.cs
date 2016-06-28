@@ -19,7 +19,7 @@ namespace LunchService.Models
 
         private User Find(int id)
         {
-            if(id > users.Count)
+            if(id >= users.Count)
             {
                 return null;
             }

@@ -31,9 +31,13 @@ namespace LunchService.Controllers
 
         // DELETE api/users/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            users.Remove(id);
+            User deletedUser = users.Remove(id);
+            if (deletedUser == null) {
+                return NotFound();
+            }
+            return new ObjectResult(deletedUser);
         }
     }
 }
