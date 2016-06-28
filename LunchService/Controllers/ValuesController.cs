@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LunchService.Models;
 
@@ -10,13 +8,18 @@ namespace LunchService.Controllers
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        List<User> users = new List<User>();
+        private readonly IUserRepository users;
+
+        public UsersController(IUserRepository users)
+        {
+            this.users = users;
+        }
 
         // GET api/users
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return users;
+            return users.GetAll();
         }
 
         // POST api/users
