@@ -7,38 +7,43 @@ using Microsoft.AspNetCore.Mvc;
 namespace LunchService.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class UsersController : Controller
     {
-        // GET api/values
+        List<string> users = new List<string>();
+
+        // GET api/users
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return users;
         }
 
-        // GET api/values/5
+        // GET api/users/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value" + id;
+            return users[id];
         }
 
-        // POST api/values
+        // POST api/users
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]string user)
         {
+            users.Add(user);
         }
 
-        // PUT api/values/5
+        // PUT api/users/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]string user)
         {
+            users.Insert(id, user);
         }
 
-        // DELETE api/values/5
+        // DELETE api/users/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            users.RemoveAt(id);
         }
     }
 }
