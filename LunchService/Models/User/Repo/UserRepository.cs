@@ -5,7 +5,7 @@ namespace LunchService.Models
 {
     public class UserRepository : IUserRepository
     {
-        private static List<User> users = new List<User>();
+        private readonly List<User> users = new List<User>();
 
         public IEnumerable<User> GetAll()
         {
