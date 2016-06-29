@@ -12,11 +12,10 @@ A restful web api providing a collection of services for organising a lunch grou
 
 Useful guide on how to get started [here](https://www.microsoft.com/net/core#macos).
 
-Ensure you have 
-
 ## Running the App
 
-Running `dotnet run` will install all dependencies with *nuget*, build the app and launch it.
+1. `dotnet restore` to install all dependencies.
+2. `dotnet run` to build and run the app.
 
 ## Services
 
