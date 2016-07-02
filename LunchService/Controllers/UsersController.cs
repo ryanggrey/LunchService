@@ -24,9 +24,13 @@ namespace LunchService.Controllers
 
         // POST api/users
         [HttpPost]
-        public void Post([FromBody]User user)
+        public IActionResult Post([FromBody]User user)
         {
+            if (user == null) {
+                return BadRequest();
+            }
             users.Add(user);
+            return Ok();
         }
 
         // DELETE api/users/5
