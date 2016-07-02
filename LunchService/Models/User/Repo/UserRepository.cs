@@ -36,5 +36,10 @@ namespace LunchService.Models
             }
             return removedUser;
         }
+
+        public int IDOfUser(User user)
+        {
+            return users.IndexOf(user);
+        }
     }
 }

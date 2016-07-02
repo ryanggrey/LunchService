@@ -22,6 +22,12 @@ namespace LunchService.Controllers
             return users.GetAll();
         }
 
+        [HttpGet("{id}", Name = "GetUser")]
+        public IActionResult Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         // POST api/users
         [HttpPost]
         public IActionResult Post([FromBody]User user)
@@ -29,8 +35,16 @@ namespace LunchService.Controllers
             if (user == null) {
                 return BadRequest();
             }
+
             users.Add(user);
-            return CreatedAtRoute(null, null);
+            int userID = users.IDOfUser(user);
+            if (userID == -1) {
+                return StatusCode(500);
+            }
+
+            string routeName = "GetUser";
+            Object routeValues = new { id = userID };
+            return CreatedAtRoute(routeName, routeValues, user);
         }
 
         // DELETE api/users/5
