@@ -30,7 +30,7 @@ namespace LunchService.Controllers
                 return BadRequest();
             }
             users.Add(user);
-            return Ok();
+            return CreatedAtRoute(null, null);
         }
 
         // DELETE api/users/5
