@@ -14,8 +14,15 @@ Useful guide on how to get started [here](https://www.microsoft.com/net/core#mac
 
 ## Running the App
 
-1. `dotnet restore` to install all dependencies.
-2. `dotnet run` to build and run the app.
+1. Ensure you are in the **LunchService** directory.
+2. `dotnet restore` to install all dependencies.
+3. `dotnet run` to build and run the app.
+
+## Tests
+
+1. Ensure you are in the **UnitTest** directory.
+2. `dotnet restore` to install all dependencies.
+3. `dotnet test` to build and run the test suite.
 
 ## Services
 
