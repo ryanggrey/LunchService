@@ -9,3 +9,4 @@ dependencies:
 test:
   override:
     - dotnet test ./UnitTest/
+    - dotnet test ./APIEndpointTest/
