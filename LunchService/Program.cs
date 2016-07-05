@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using System.Threading;
+using LunchService.Hosting;
 
 namespace LunchService
 {
@@ -13,19 +14,8 @@ namespace LunchService
     {
         public static void Main(string[] args)
         {
-            GetHost().Run();
-        }
-
-        public static IWebHost GetHost()
-        {
-            var host = new WebHostBuilder()
-            .UseKestrel()
-            .UseContentRoot(Directory.GetCurrentDirectory())
-            .UseIISIntegration()
-            .UseStartup<Startup>()
-            .Build();
-
-            return host;
+            Host host = new Host();
+            host.StartOnMainThread();
         }
     }
 }

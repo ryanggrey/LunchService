@@ -8,6 +8,7 @@ using LunchService;
 using System.Threading;
 using System.Net;
 using Microsoft.AspNetCore.Hosting;
+using LunchService.Hosting;
 
 namespace APIEndpointTest
 {
@@ -15,31 +16,16 @@ namespace APIEndpointTest
     // https://xunit.github.io/docs/getting-started-dotnet-core.html
     public class GETTest: IDisposable
     {
-        private IWebHost host { get; set; }
+        private Host host = new Host();
 
         public GETTest()
         {
-            host = LunchService.Program.GetHost();
-            RunRestAppInBackground(host);
+            host.StartOnBackgroundThread();
         }
 
         public void Dispose()
         {
-            host.Dispose();
-        }
-
-        private void RunRestAppInBackground(IWebHost host)
-        {
-            AutoResetEvent eventWaitHandle = new AutoResetEvent(false);
-            Thread backgroundApp = new Thread(() => StartBackgroundApp(host, eventWaitHandle));
-            backgroundApp.Start();
-            eventWaitHandle.WaitOne();
-        }
-
-        private void StartBackgroundApp(IWebHost host, EventWaitHandle waitHandle)
-        {
-            host.Start();
-            waitHandle.Set();
+            host.Stop();
         }
 
         [Fact]
