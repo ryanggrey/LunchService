@@ -2,6 +2,7 @@
     "version": "1.0.0-*",
     "testRunner": "xunit",
     "dependencies": {
+        "LunchService": "*",
         "dotnet-test-xunit": "1.0.0-*",
         "Microsoft.NETCore.App": {
             "type": "platform",
