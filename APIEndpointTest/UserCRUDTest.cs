@@ -33,7 +33,7 @@ namespace APIEndpointTest
         }
 
         [Fact]
-        public async void test_valid_GET_all_users_returns_200()
+        public async Task test_valid_GET_all_users_returns_200()
         {
             using (HttpClient client = new HttpClient())
             {
@@ -44,7 +44,7 @@ namespace APIEndpointTest
         }
 
         [Fact]
-        public async void test_valid_POST_user_returns_201()
+        public async Task test_valid_POST_user_returns_201()
         {
             User user = new User();
             user.Name = "Ryan";
