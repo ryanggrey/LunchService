@@ -76,6 +76,24 @@ namespace APIEndpointTest
         }
 
         [Fact]
+        public async Task test_when_1_user_GET_all_users_returns_1_correct_user()
+        {
+            User user = new User("Ryan");
+            HttpContent content = UserContent(user);
+
+            using (HttpClient client = new HttpClient())
+            {
+                await client.PostAsync(endpoint, content);
+                HttpResponseMessage response = await client.GetAsync(endpoint);
+                string observedResponse = await response.Content.ReadAsStringAsync();
+                List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(observedResponse);
+                List<User> expectedUsers = new List<User>{user};
+
+                Assert.Equal(expectedUsers, observedUsers);
+            }
+        }
+
+        [Fact]
         public async Task test_valid_POST_user_returns_201()
         {
             User user = new User("Ryan");
