@@ -55,8 +55,6 @@ namespace APIEndpointTest
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
-
-            Dispose(response);
         }
 
         [Fact]
@@ -67,8 +65,6 @@ namespace APIEndpointTest
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
-
-            Dispose(response);
         }
 
         [Fact]
@@ -79,55 +75,43 @@ namespace APIEndpointTest
             string expectedResponseContent = "[]";
 
             Assert.Equal(expectedResponseContent, observedResponseContent);
-
-            Dispose(response);
         }
 
         [Fact]
         public async Task test_when_1_user_GET_all_users_returns_1_correct_user()
         {
             User user = new User("Ryan");
-            HttpContent content = UserContent(user);
+            await PostUser(user);
 
-            await client.PostAsync(endpoint, content);
             HttpResponseMessage response = await client.GetAsync(endpoint);
-            string observedResponse = await response.Content.ReadAsStringAsync();
-            List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(observedResponse);
+            string jsonContent = await response.Content.ReadAsStringAsync();
+            
+            List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(jsonContent);
             List<User> expectedUsers = new List<User>{user};
 
             Assert.Equal(expectedUsers, observedUsers);
-
-            Dispose(content, response);
         }
 
         [Fact]
         public async Task test_valid_POST_user_returns_201()
         {
             User user = new User("Ryan");
-            HttpContent content = UserContent(user);
-
-            HttpResponseMessage response = await client.PostAsync(endpoint, content);
+            HttpResponseMessage response = await PostUser(user);
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created;
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
-
-            Dispose(content, response);
         }
 
         [Fact]
         public async Task test_valid_POST_user_returns_correct_location_of_new_resource()
         {
             User user = new User("Ryan");
-            HttpContent content = UserContent(user);
-
-            HttpResponseMessage response = await client.PostAsync(endpoint, content);
+            HttpResponseMessage response = await PostUser(user);
             string expectedLocation = endpoint + "/0";
             string observedLocation = response.Headers.Location.ToString();
 
             Assert.Equal(expectedLocation, observedLocation);
-
-            Dispose(content, response);
         }
 
         #endregion Tests
@@ -140,7 +124,19 @@ namespace APIEndpointTest
             HttpContent content = new StringContent(jsonUser);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
+            Dispose(content);
+
             return content;
+        }
+
+        private async Task<HttpResponseMessage> PostUser(User user)
+        {
+            HttpContent content = UserContent(user);
+            HttpResponseMessage response = await client.PostAsync(endpoint, content);
+
+            Dispose(response);
+
+            return response;
         }
 
         #endregion Util
