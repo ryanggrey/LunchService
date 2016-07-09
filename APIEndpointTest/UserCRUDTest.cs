@@ -32,6 +32,8 @@ namespace APIEndpointTest
             host.Stop();
         }
 
+        #region Tests
+
         [Fact]
         public async Task test_invalid_GET_endpoint_returns_400()
         {
@@ -76,12 +78,8 @@ namespace APIEndpointTest
         [Fact]
         public async Task test_valid_POST_user_returns_201()
         {
-            User user = new User();
-            user.Name = "Ryan";
-
-            string jsonUser = JsonConvert.SerializeObject(user);
-            HttpContent content = new StringContent(jsonUser);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            User user = new User("Ryan");
+            HttpContent content = UserContent(user);
 
             using (HttpClient client = new HttpClient())
             {
@@ -96,12 +94,8 @@ namespace APIEndpointTest
         [Fact]
         public async Task test_valid_POST_user_returns_correct_location_of_new_resource()
         {
-            User user = new User();
-            user.Name = "Ryan";
-
-            string jsonUser = JsonConvert.SerializeObject(user);
-            HttpContent content = new StringContent(jsonUser);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            User user = new User("Ryan");
+            HttpContent content = UserContent(user);
 
             using (HttpClient client = new HttpClient())
             {
@@ -112,5 +106,20 @@ namespace APIEndpointTest
                 Assert.Equal(expectedLocation, observedLocation);
             }
         }
+
+        #endregion Tests
+
+        #region Util
+
+        private HttpContent UserContent(User user)
+        {
+            string jsonUser = JsonConvert.SerializeObject(user);
+            HttpContent content = new StringContent(jsonUser);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            return content;
+        }
+
+        #endregion Util
     }
 }

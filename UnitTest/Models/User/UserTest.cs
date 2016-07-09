@@ -12,11 +12,10 @@ namespace UnitTest
     public class UserTest
     {
         [Fact]
-        public void can_set_User_Name()
+        public void can_instantiate_User_with_name()
         {
-            User user = new User();
             string exptectedName = "Ryan";
-            user.Name = exptectedName;
+            User user = new User(exptectedName);
             string observedName = user.Name;
             Assert.Equal(exptectedName, observedName);
         }
@@ -24,9 +23,8 @@ namespace UnitTest
         [Fact]
         public void can_get_User_Name()
         {
-            User user = new User();
             string exptectedName = "Ryan";
-            user.Name = exptectedName;
+            User user = new User(exptectedName);
             string observedName = user.Name;
             Assert.Equal(exptectedName, observedName);
         }
