@@ -19,7 +19,7 @@ namespace APIEndpointTest
     // https://xunit.github.io/docs/getting-started-dotnet-core.html
     public class UserCRUDTest: IDisposable
     {
-        private const string endpoint = "http://localhost:5000/api/users";
+        private const string endpoint = "http://localhost:5000/api/Users";
         private Host host = new Host();
 
         public UserCRUDTest()
@@ -90,6 +90,26 @@ namespace APIEndpointTest
                 HttpStatusCode observedStatusCode = response.StatusCode;
 
                 Assert.Equal(expectedStatusCode, observedStatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task test_valid_POST_user_returns_correct_location_of_new_resource()
+        {
+            User user = new User();
+            user.Name = "Ryan";
+
+            string jsonUser = JsonConvert.SerializeObject(user);
+            HttpContent content = new StringContent(jsonUser);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.PostAsync(endpoint, content);
+                string expectedLocation = endpoint + "/0";
+                string observedLocation = response.Headers.Location.ToString();
+
+                Assert.Equal(expectedLocation, observedLocation);
             }
         }
     }
