@@ -21,6 +21,7 @@ namespace APIEndpointTest
     {
         private const string endpoint = "http://localhost:5000/api/Users";
         private Host host = new Host();
+        private HttpClient client = new HttpClient();
 
         public UserCRUDTest()
         {
@@ -30,6 +31,7 @@ namespace APIEndpointTest
         public void Dispose()
         {
             host.Stop();
+            client.Dispose();
         }
 
         #region Tests
@@ -39,40 +41,31 @@ namespace APIEndpointTest
         {
             string invalidEndpoint = endpoint + "s";
 
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync(invalidEndpoint);
-                HttpStatusCode expectedStatusCode = HttpStatusCode.NotFound;
-                HttpStatusCode observedStatusCode = response.StatusCode;
+            HttpResponseMessage response = await client.GetAsync(invalidEndpoint);
+            HttpStatusCode expectedStatusCode = HttpStatusCode.NotFound;
+            HttpStatusCode observedStatusCode = response.StatusCode;
 
-                Assert.Equal(expectedStatusCode, observedStatusCode);
-            }
+            Assert.Equal(expectedStatusCode, observedStatusCode);
         }
 
         [Fact]
         public async Task test_valid_GET_all_users_returns_200()
         {
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync(endpoint);
-                HttpStatusCode expectedStatusCode = HttpStatusCode.OK;
-                HttpStatusCode observedStatusCode = response.StatusCode;
+            HttpResponseMessage response = await client.GetAsync(endpoint);
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK;
+            HttpStatusCode observedStatusCode = response.StatusCode;
 
-                Assert.Equal(expectedStatusCode, observedStatusCode);
-            }
+            Assert.Equal(expectedStatusCode, observedStatusCode);
         }
 
         [Fact]
         public async Task test_when_0_users_GET_all_users_returns_0_users()
         {
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync(endpoint);
-                string observedResponseContent = await response.Content.ReadAsStringAsync();
-                string expectedResponseContent = "[]";
+            HttpResponseMessage response = await client.GetAsync(endpoint);
+            string observedResponseContent = await response.Content.ReadAsStringAsync();
+            string expectedResponseContent = "[]";
 
-                Assert.Equal(expectedResponseContent, observedResponseContent);
-            }
+            Assert.Equal(expectedResponseContent, observedResponseContent);
         }
 
         [Fact]
@@ -81,16 +74,13 @@ namespace APIEndpointTest
             User user = new User("Ryan");
             HttpContent content = UserContent(user);
 
-            using (HttpClient client = new HttpClient())
-            {
-                await client.PostAsync(endpoint, content);
-                HttpResponseMessage response = await client.GetAsync(endpoint);
-                string observedResponse = await response.Content.ReadAsStringAsync();
-                List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(observedResponse);
-                List<User> expectedUsers = new List<User>{user};
+            await client.PostAsync(endpoint, content);
+            HttpResponseMessage response = await client.GetAsync(endpoint);
+            string observedResponse = await response.Content.ReadAsStringAsync();
+            List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(observedResponse);
+            List<User> expectedUsers = new List<User>{user};
 
-                Assert.Equal(expectedUsers, observedUsers);
-            }
+            Assert.Equal(expectedUsers, observedUsers);
         }
 
         [Fact]
@@ -99,14 +89,11 @@ namespace APIEndpointTest
             User user = new User("Ryan");
             HttpContent content = UserContent(user);
 
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PostAsync(endpoint, content);
-                HttpStatusCode expectedStatusCode = HttpStatusCode.Created;
-                HttpStatusCode observedStatusCode = response.StatusCode;
+            HttpResponseMessage response = await client.PostAsync(endpoint, content);
+            HttpStatusCode expectedStatusCode = HttpStatusCode.Created;
+            HttpStatusCode observedStatusCode = response.StatusCode;
 
-                Assert.Equal(expectedStatusCode, observedStatusCode);
-            }
+            Assert.Equal(expectedStatusCode, observedStatusCode);
         }
 
         [Fact]
@@ -115,14 +102,11 @@ namespace APIEndpointTest
             User user = new User("Ryan");
             HttpContent content = UserContent(user);
 
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PostAsync(endpoint, content);
-                string expectedLocation = endpoint + "/0";
-                string observedLocation = response.Headers.Location.ToString();
+            HttpResponseMessage response = await client.PostAsync(endpoint, content);
+            string expectedLocation = endpoint + "/0";
+            string observedLocation = response.Headers.Location.ToString();
 
-                Assert.Equal(expectedLocation, observedLocation);
-            }
+            Assert.Equal(expectedLocation, observedLocation);
         }
 
         #endregion Tests
