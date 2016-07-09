@@ -40,8 +40,10 @@ namespace APIEndpointTest
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.GetAsync(invalidEndpoint);
+                HttpStatusCode expectedStatusCode = HttpStatusCode.NotFound;
+                HttpStatusCode observedStatusCode = response.StatusCode;
 
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                Assert.Equal(expectedStatusCode, observedStatusCode);
             }
         }
 
@@ -51,8 +53,10 @@ namespace APIEndpointTest
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.GetAsync(endpoint);
+                HttpStatusCode expectedStatusCode = HttpStatusCode.OK;
+                HttpStatusCode observedStatusCode = response.StatusCode;
 
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(expectedStatusCode, observedStatusCode);
             }
         }
 
@@ -82,8 +86,10 @@ namespace APIEndpointTest
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.PostAsync(endpoint, content);
+                HttpStatusCode expectedStatusCode = HttpStatusCode.Created;
+                HttpStatusCode observedStatusCode = response.StatusCode;
 
-                Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+                Assert.Equal(expectedStatusCode, observedStatusCode);
             }
         }
     }
