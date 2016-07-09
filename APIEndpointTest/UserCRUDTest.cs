@@ -33,6 +33,19 @@ namespace APIEndpointTest
         }
 
         [Fact]
+        public async Task test_invalid_GET_endpoint_returns_400()
+        {
+            string invalidEndpoint = endpoint + "s";
+
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(invalidEndpoint);
+
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            }
+        }
+
+        [Fact]
         public async Task test_valid_GET_all_users_returns_200()
         {
             using (HttpClient client = new HttpClient())
