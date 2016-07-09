@@ -57,6 +57,19 @@ namespace APIEndpointTest
         }
 
         [Fact]
+        public async Task test_when_0_users_GET_all_users_returns_0_users()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(endpoint);
+                string observedResponseContent = await response.Content.ReadAsStringAsync();
+                string expectedResponseContent = "[]";
+
+                Assert.Equal(expectedResponseContent, observedResponseContent);
+            }
+        }
+
+        [Fact]
         public async Task test_valid_POST_user_returns_201()
         {
             User user = new User();
