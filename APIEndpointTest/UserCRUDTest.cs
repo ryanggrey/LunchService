@@ -22,16 +22,25 @@ namespace APIEndpointTest
         private const string endpoint = "http://localhost:5000/api/Users";
         private Host host = new Host();
         private HttpClient client = new HttpClient();
+        private readonly List<IDisposable> disposables = new List<IDisposable>();
 
         public UserCRUDTest()
         {
             host.StartOnBackgroundThread();
+            disposables.Add(client);
         }
 
+        // automatically called at end of each test
         public void Dispose()
         {
             host.Stop();
-            client.Dispose();
+            disposables.ForEach(disposable => disposable.Dispose());
+        }
+
+        // call to queue items for disposal at end of each test
+        public void Dispose(params IDisposable[] toDispose)
+        {
+            disposables.AddRange(toDispose);
         }
 
         #region Tests
@@ -46,6 +55,8 @@ namespace APIEndpointTest
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(response);
         }
 
         [Fact]
@@ -56,6 +67,8 @@ namespace APIEndpointTest
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(response);
         }
 
         [Fact]
@@ -66,6 +79,8 @@ namespace APIEndpointTest
             string expectedResponseContent = "[]";
 
             Assert.Equal(expectedResponseContent, observedResponseContent);
+
+            Dispose(response);
         }
 
         [Fact]
@@ -81,6 +96,8 @@ namespace APIEndpointTest
             List<User> expectedUsers = new List<User>{user};
 
             Assert.Equal(expectedUsers, observedUsers);
+
+            Dispose(content, response);
         }
 
         [Fact]
@@ -94,6 +111,8 @@ namespace APIEndpointTest
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(content, response);
         }
 
         [Fact]
@@ -107,6 +126,8 @@ namespace APIEndpointTest
             string observedLocation = response.Headers.Location.ToString();
 
             Assert.Equal(expectedLocation, observedLocation);
+
+            Dispose(content, response);
         }
 
         #endregion Tests
