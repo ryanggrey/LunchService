@@ -70,7 +70,7 @@ namespace APIEndpointTest
         [Fact]
         public async Task test_when_0_users_GET_all_users_returns_0_users()
         {
-            HttpResponseMessage response = await client.GetAsync(endpoint);
+            HttpResponseMessage response = await GetAllUsers();
             string observedResponseContent = await response.Content.ReadAsStringAsync();
             string expectedResponseContent = "[]";
 
@@ -83,9 +83,9 @@ namespace APIEndpointTest
             User user = new User("Ryan");
             await PostUser(user);
 
-            HttpResponseMessage response = await client.GetAsync(endpoint);
+            HttpResponseMessage response = await GetAllUsers();
             string jsonContent = await response.Content.ReadAsStringAsync();
-            
+
             List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(jsonContent);
             List<User> expectedUsers = new List<User>{user};
 
@@ -133,6 +133,15 @@ namespace APIEndpointTest
         {
             HttpContent content = UserContent(user);
             HttpResponseMessage response = await client.PostAsync(endpoint, content);
+
+            Dispose(response);
+
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> GetAllUsers()
+        {
+            HttpResponseMessage response = await client.GetAsync(endpoint);
 
             Dispose(response);
 
