@@ -12,8 +12,17 @@ namespace APIEndpoint.Rest
         private string endpoint;
         private HttpClient client = new HttpClient();
 
+        public Uri BaseAddress
+        {
+            get
+            {
+                return client.BaseAddress;
+            }
+        }
+
         public LunchClient(string apiEndpoint)
         {
+            client.BaseAddress = new Uri("http://localhost:5000/api/");
             endpoint = apiEndpoint;
         }
 

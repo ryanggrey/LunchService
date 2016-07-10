@@ -20,7 +20,7 @@ namespace APIEndpoint.Test
     // https://xunit.github.io/docs/getting-started-dotnet-core.html
     public class UserCRUDTest: IDisposable
     {
-        private const string endpoint = "http://localhost:5000/api/Users";
+        private const string endpoint = "Users";
         private LunchClient client = new LunchClient(endpoint);
         private Host host = new Host();
         private readonly List<IDisposable> disposables = new List<IDisposable>();
@@ -51,8 +51,8 @@ namespace APIEndpoint.Test
         {
             string invalidEndpoint = endpoint + "s";
 
-            HttpClient restClient = new HttpClient();
-            HttpResponseMessage response = await restClient.GetAsync(invalidEndpoint);
+            LunchClient restClient = new LunchClient(invalidEndpoint);
+            HttpResponseMessage response = await restClient.GetAllUsers();
             HttpStatusCode expectedStatusCode = HttpStatusCode.NotFound;
             HttpStatusCode observedStatusCode = response.StatusCode;
 
@@ -120,7 +120,7 @@ namespace APIEndpoint.Test
         {
             User user = new User("Ryan");
             HttpResponseMessage response = await client.PostUser(user);
-            string expectedLocation = endpoint + "/0";
+            string expectedLocation = client.BaseAddress.ToString() + endpoint + "/0";
             string observedLocation = response.Headers.Location.ToString();
 
             Assert.Equal(expectedLocation, observedLocation);
