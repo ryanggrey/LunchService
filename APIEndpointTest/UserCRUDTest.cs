@@ -128,6 +128,20 @@ namespace APIEndpoint.Test
             Dispose(response);
         }
 
+        [Fact]
+        public async Task test_valid_POST_user_returns_content_with_new_user()
+        {
+            User expectedUser = new User("Ryan");
+            HttpResponseMessage response = await client.PostUser(expectedUser);
+            string jsonContent = await response.Content.ReadAsStringAsync();
+
+            User observedUser = JsonConvert.DeserializeObject<User>(jsonContent);
+
+            Assert.Equal(expectedUser, observedUser);
+
+            Dispose(response);
+        }
+
         #endregion Tests
     }
 }
