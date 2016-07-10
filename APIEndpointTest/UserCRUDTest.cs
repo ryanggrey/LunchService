@@ -47,7 +47,7 @@ namespace APIEndpoint.Test
         #region Tests
 
         [Fact]
-        public async Task test_invalid_GET_endpoint_returns_400()
+        public async Task test_invalid_GET_endpoint_returns_404()
         {
             string invalidEndpoint = endpoint + "s";
 
