@@ -12,16 +12,17 @@ using Microsoft.AspNetCore.Hosting;
 using LunchService.Hosting;
 using LunchService.Models;
 using Newtonsoft.Json;
+using APIEndpoint.Rest;
 
-namespace APIEndpointTest
+namespace APIEndpoint.Test
 {
     // see example explanation on xUnit.net website:
     // https://xunit.github.io/docs/getting-started-dotnet-core.html
     public class UserCRUDTest: IDisposable
     {
         private const string endpoint = "http://localhost:5000/api/Users";
+        private LunchClient client = new LunchClient(endpoint);
         private Host host = new Host();
-        private HttpClient client = new HttpClient();
         private readonly List<IDisposable> disposables = new List<IDisposable>();
 
         public UserCRUDTest()
@@ -50,104 +51,83 @@ namespace APIEndpointTest
         {
             string invalidEndpoint = endpoint + "s";
 
-            HttpResponseMessage response = await client.GetAsync(invalidEndpoint);
+            HttpClient restClient = new HttpClient();
+            HttpResponseMessage response = await restClient.GetAsync(invalidEndpoint);
             HttpStatusCode expectedStatusCode = HttpStatusCode.NotFound;
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(restClient, response);
         }
 
         [Fact]
         public async Task test_valid_GET_all_users_returns_200()
         {
-            HttpResponseMessage response = await client.GetAsync(endpoint);
+            HttpResponseMessage response = await client.GetAllUsers();
             HttpStatusCode expectedStatusCode = HttpStatusCode.OK;
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(response);
         }
 
         [Fact]
         public async Task test_when_0_users_GET_all_users_returns_0_users()
         {
-            HttpResponseMessage response = await GetAllUsers();
+            HttpResponseMessage response = await client.GetAllUsers();
             string observedResponseContent = await response.Content.ReadAsStringAsync();
             string expectedResponseContent = "[]";
 
             Assert.Equal(expectedResponseContent, observedResponseContent);
+
+            Dispose(response);
         }
 
         [Fact]
         public async Task test_when_1_user_GET_all_users_returns_1_correct_user()
         {
             User user = new User("Ryan");
-            await PostUser(user);
+            await client.PostUser(user);
 
-            HttpResponseMessage response = await GetAllUsers();
+            HttpResponseMessage response = await client.GetAllUsers();
             string jsonContent = await response.Content.ReadAsStringAsync();
 
             List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(jsonContent);
             List<User> expectedUsers = new List<User>{user};
 
             Assert.Equal(expectedUsers, observedUsers);
+
+            Dispose(response);
         }
 
         [Fact]
         public async Task test_valid_POST_user_returns_201()
         {
             User user = new User("Ryan");
-            HttpResponseMessage response = await PostUser(user);
+            HttpResponseMessage response = await client.PostUser(user);
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created;
             HttpStatusCode observedStatusCode = response.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(response);
         }
 
         [Fact]
         public async Task test_valid_POST_user_returns_correct_location_of_new_resource()
         {
             User user = new User("Ryan");
-            HttpResponseMessage response = await PostUser(user);
+            HttpResponseMessage response = await client.PostUser(user);
             string expectedLocation = endpoint + "/0";
             string observedLocation = response.Headers.Location.ToString();
 
             Assert.Equal(expectedLocation, observedLocation);
+
+            Dispose(response);
         }
 
         #endregion Tests
-
-        #region Util
-
-        private HttpContent UserContent(User user)
-        {
-            string jsonUser = JsonConvert.SerializeObject(user);
-            HttpContent content = new StringContent(jsonUser);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            Dispose(content);
-
-            return content;
-        }
-
-        private async Task<HttpResponseMessage> PostUser(User user)
-        {
-            HttpContent content = UserContent(user);
-            HttpResponseMessage response = await client.PostAsync(endpoint, content);
-
-            Dispose(response);
-
-            return response;
-        }
-
-        private async Task<HttpResponseMessage> GetAllUsers()
-        {
-            HttpResponseMessage response = await client.GetAsync(endpoint);
-
-            Dispose(response);
-
-            return response;
-        }
-
-        #endregion Util
     }
 }
