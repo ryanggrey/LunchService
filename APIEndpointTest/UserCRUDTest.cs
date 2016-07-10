@@ -142,6 +142,18 @@ namespace APIEndpoint.Test
             Dispose(response);
         }
 
+        [Fact]
+        public async Task test_POST_with_no_user_returns_400()
+        {
+            HttpResponseMessage response = await client.PostUser(null);
+            HttpStatusCode expectedStatusCode = HttpStatusCode.BadRequest;
+            HttpStatusCode observedStatusCode = response.StatusCode;
+
+            Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(response);
+        }
+
         #endregion Tests
     }
 }
