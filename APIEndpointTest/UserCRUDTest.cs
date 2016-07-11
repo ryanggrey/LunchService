@@ -157,7 +157,7 @@ namespace APIEndpoint.Test
         [Fact]
         public async Task test_POST_with_malformed_user_returns_400()
         {
-            Object malformedUser = new
+            object malformedUser = new
             {
                 Pie = "Ryan"
             };
@@ -170,6 +170,24 @@ namespace APIEndpoint.Test
 
             Dispose(response);
         }
+
+        [Fact]
+        public async Task test_POST_with_malformed_user_returns_error_content()
+        {
+            object malformedUser = new
+            {
+                Pudding = "Rice"
+            };
+
+            HttpResponseMessage response = await client.Post(malformedUser);
+            string expectedResponseContent = @"{""Name"":[""The Name field is required.""]}";
+            string observedResponseContent = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(expectedResponseContent, observedResponseContent);
+
+            Dispose(response);
+        }
+
         #endregion Tests
     }
 }
