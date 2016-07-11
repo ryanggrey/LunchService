@@ -154,6 +154,22 @@ namespace APIEndpoint.Test
             Dispose(response);
         }
 
+        [Fact]
+        public async Task test_POST_with_malformed_user_returns_400()
+        {
+            Object malformedUser = new
+            {
+                Pie = "Ryan"
+            };
+
+            HttpResponseMessage response = await client.Post(malformedUser);
+            HttpStatusCode expectedStatusCode = HttpStatusCode.BadRequest;
+            HttpStatusCode observedStatusCode = response.StatusCode;
+
+            Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            Dispose(response);
+        }
         #endregion Tests
     }
 }
