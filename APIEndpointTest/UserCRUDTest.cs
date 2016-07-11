@@ -214,6 +214,20 @@ namespace APIEndpoint.Test
             Dispose(response);
         }
 
+        [Fact]
+        public async Task test_POST_with_malformed_json_content_returns_error_content()
+        {
+            string malformedJson = @"""{ ""Name"" ""Ryan""}"""; // missing key-value colon
+
+            HttpResponseMessage response = await client.Post(malformedJson);
+            string expectedResponseContent = @"{"""":[""The input was not valid.""]}";
+            string observedResponseContent = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(expectedResponseContent, observedResponseContent);
+
+            Dispose(response);
+        }
+
         #endregion Tests
     }
 }
