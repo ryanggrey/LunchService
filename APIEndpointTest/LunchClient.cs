@@ -31,21 +31,26 @@ namespace APIEndpoint.Rest
             client.Dispose();
         }
 
-        private HttpContent HttpContentFrom(object obj)
+        private HttpContent HttpContentFrom(string json)
         {
-            string json = JsonConvert.SerializeObject(obj);
             HttpContent content = new StringContent(json);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             return content;
         }
 
-        public async Task<HttpResponseMessage> Post(object obj)
+        public async Task<HttpResponseMessage> Post(string json)
         {
-            HttpContent content = HttpContentFrom(obj);
+            HttpContent content = HttpContentFrom(json);
             HttpResponseMessage response = await client.PostAsync(endpoint, content);
 
             return response;
+        }
+
+        public async Task<HttpResponseMessage> Post(object obj)
+        {
+            string json = JsonConvert.SerializeObject(obj);
+            return await Post(json);
         }
 
         public async Task<HttpResponseMessage> GetAllUsers()

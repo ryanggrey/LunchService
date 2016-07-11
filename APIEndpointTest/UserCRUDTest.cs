@@ -145,7 +145,7 @@ namespace APIEndpoint.Test
         [Fact]
         public async Task test_POST_with_no_user_returns_400()
         {
-            HttpResponseMessage response = await client.Post(null);
+            HttpResponseMessage response = await client.Post((object)null);
             HttpStatusCode expectedStatusCode = HttpStatusCode.BadRequest;
             HttpStatusCode observedStatusCode = response.StatusCode;
 
@@ -157,7 +157,7 @@ namespace APIEndpoint.Test
         [Fact]
         public async Task test_POST_with_no_user_returns_error_content()
         {
-            HttpResponseMessage response = await client.Post(null);
+            HttpResponseMessage response = await client.Post((object)null);
             string expectedResponseContent = "User required in request body.";
             string observedResponseContent = await response.Content.ReadAsStringAsync();
 
@@ -196,6 +196,20 @@ namespace APIEndpoint.Test
             string observedResponseContent = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(expectedResponseContent, observedResponseContent);
+
+            Dispose(response);
+        }
+
+        [Fact]
+        public async Task test_POST_with_malformed_json_content_returns_400()
+        {
+            string malformedJson = @"""{ ""Name"" ""Ryan""}"""; // missing key-value colon
+
+            HttpResponseMessage response = await client.Post(malformedJson);
+            HttpStatusCode expectedStatusCode = HttpStatusCode.BadRequest;
+            HttpStatusCode observedStatusCode = response.StatusCode;
+
+            Assert.Equal(expectedStatusCode, observedStatusCode);
 
             Dispose(response);
         }
