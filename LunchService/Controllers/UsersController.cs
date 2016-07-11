@@ -35,7 +35,7 @@ namespace LunchService.Controllers
         public IActionResult Post([FromBody]User user)
         {
             if (user == null) {
-                return BadRequest();
+                return BadRequest("User required in request body.");
             }
 
             users.Add(user);

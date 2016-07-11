@@ -155,6 +155,18 @@ namespace APIEndpoint.Test
         }
 
         [Fact]
+        public async Task test_POST_with_no_user_returns_error_content()
+        {
+            HttpResponseMessage response = await client.Post(null);
+            string expectedResponseContent = "User required in request body.";
+            string observedResponseContent = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(expectedResponseContent, observedResponseContent);
+
+            Dispose(response);
+        }
+
+        [Fact]
         public async Task test_POST_with_malformed_user_returns_400()
         {
             object malformedUser = new
