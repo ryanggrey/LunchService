@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using System.Net.Http;
 using LunchService;
 using System.Threading;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using LunchService.Hosting;
@@ -89,7 +89,7 @@ namespace APIEndpoint.Test
         public async Task test_when_1_user_GET_all_users_returns_1_correct_user()
         {
             User user = new User("Ryan");
-            await client.PostUser(user);
+            await client.Post(user);
 
             HttpResponseMessage response = await client.GetAllUsers();
             string jsonContent = await response.Content.ReadAsStringAsync();
@@ -106,7 +106,7 @@ namespace APIEndpoint.Test
         public async Task test_valid_POST_user_returns_201()
         {
             User user = new User("Ryan");
-            HttpResponseMessage response = await client.PostUser(user);
+            HttpResponseMessage response = await client.Post(user);
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created;
             HttpStatusCode observedStatusCode = response.StatusCode;
 
@@ -119,7 +119,7 @@ namespace APIEndpoint.Test
         public async Task test_valid_POST_user_returns_correct_location_of_new_resource()
         {
             User user = new User("Ryan");
-            HttpResponseMessage response = await client.PostUser(user);
+            HttpResponseMessage response = await client.Post(user);
             string expectedLocation = client.BaseAddress.ToString() + endpoint + "/0";
             string observedLocation = response.Headers.Location.ToString();
 
@@ -132,7 +132,7 @@ namespace APIEndpoint.Test
         public async Task test_valid_POST_user_returns_content_with_new_user()
         {
             User expectedUser = new User("Ryan");
-            HttpResponseMessage response = await client.PostUser(expectedUser);
+            HttpResponseMessage response = await client.Post(expectedUser);
             string jsonContent = await response.Content.ReadAsStringAsync();
 
             User observedUser = JsonConvert.DeserializeObject<User>(jsonContent);
@@ -145,7 +145,7 @@ namespace APIEndpoint.Test
         [Fact]
         public async Task test_POST_with_no_user_returns_400()
         {
-            HttpResponseMessage response = await client.PostUser(null);
+            HttpResponseMessage response = await client.Post(null);
             HttpStatusCode expectedStatusCode = HttpStatusCode.BadRequest;
             HttpStatusCode observedStatusCode = response.StatusCode;
 

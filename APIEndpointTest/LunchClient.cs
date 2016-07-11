@@ -31,18 +31,18 @@ namespace APIEndpoint.Rest
             client.Dispose();
         }
 
-        private HttpContent UserContent(User user)
+        private HttpContent HttpContentFrom(object obj)
         {
-            string jsonUser = JsonConvert.SerializeObject(user);
-            HttpContent content = new StringContent(jsonUser);
+            string json = JsonConvert.SerializeObject(obj);
+            HttpContent content = new StringContent(json);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             return content;
         }
 
-        public async Task<HttpResponseMessage> PostUser(User user)
+        public async Task<HttpResponseMessage> Post(object obj)
         {
-            HttpContent content = UserContent(user);
+            HttpContent content = HttpContentFrom(obj);
             HttpResponseMessage response = await client.PostAsync(endpoint, content);
 
             return response;
