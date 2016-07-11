@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using LunchService.Models;
+using LunchService.Filters;
 
 namespace LunchService.Controllers
 {
@@ -30,6 +31,7 @@ namespace LunchService.Controllers
 
         // POST api/users
         [HttpPost]
+        [ValidateModel]
         public IActionResult Post([FromBody]User user)
         {
             if (user == null) {

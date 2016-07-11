@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace LunchService.Models
 {
     public class User
     {
+        [Required]
+        [StringLength(int.MaxValue, MinimumLength = 1)]
         public string Name { get; set; }
 
         public User(string name)
