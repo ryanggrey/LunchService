@@ -73,49 +73,25 @@ namespace APIEndpoint.Test
             Dispose(response);
         }
 
-        [Fact]
-        public async Task test_when_0_users_GET_all_users_returns_0_users()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(10)]
+        public async Task test_when_n_users_GET_all_users_returns_n_correct_users(int n)
         {
-            HttpResponseMessage response = await client.GetAllUsers();
-            string observedResponseContent = await response.Content.ReadAsStringAsync();
-            string expectedResponseContent = "[]";
-
-            Assert.Equal(expectedResponseContent, observedResponseContent);
-
-            Dispose(response);
-        }
-
-        [Fact]
-        public async Task test_when_1_user_GET_all_users_returns_1_correct_user()
-        {
-            User user = new User("Ryan");
-            await client.Post(user);
+            List<User> expectedUsers = new List<User>();
+            for (int i = 0; i < n; i++)
+            {
+                User user = new User(i.ToString());
+                expectedUsers.Add(user);
+                await client.Post(user);
+            }
 
             HttpResponseMessage response = await client.GetAllUsers();
             string jsonContent = await response.Content.ReadAsStringAsync();
 
             List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(jsonContent);
-            List<User> expectedUsers = new List<User>{user};
-
-            Assert.Equal(expectedUsers, observedUsers);
-
-            Dispose(response);
-        }
-
-        [Fact]
-        public async Task test_when_2_users_GET_all_users_returns_2_correct_users()
-        {
-            User user1 = new User("Ryan");
-            User user2 = new User("Elizabeth");
-
-            await client.Post(user1);
-            await client.Post(user2);
-
-            HttpResponseMessage response = await client.GetAllUsers();
-            string jsonContent = await response.Content.ReadAsStringAsync();
-
-            List<User> observedUsers = JsonConvert.DeserializeObject<List<User>>(jsonContent);
-            List<User> expectedUsers = new List<User>{user1, user2};
 
             Assert.Equal(expectedUsers, observedUsers);
 
