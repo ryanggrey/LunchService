@@ -78,12 +78,12 @@ namespace APIEndpoint.Test
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(10)]
-        public async Task test_when_n_users_GET_all_users_returns_n_correct_users(int n)
+        public async Task test_when_n_users_GET_all_users_returns_n_correct_users(int numberOfUsers)
         {
             List<User> expectedUsers = new List<User>();
-            for (int i = 0; i < n; i++)
+            for (int userIndex = 0; userIndex < numberOfUsers; userIndex++)
             {
-                User user = new User(i.ToString());
+                User user = new User(userIndex.ToString());
                 expectedUsers.Add(user);
                 await client.Post(user);
             }
