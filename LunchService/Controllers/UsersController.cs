@@ -57,16 +57,5 @@ namespace LunchService.Controllers
             Object routeValues = new { id = user.ID };
             return CreatedAtRoute(routeName, routeValues, user);
         }
-
-        // DELETE api/users/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
-        {
-            User deletedUser = users.Remove(id);
-            if (deletedUser == null) {
-                return NotFound();
-            }
-            return new ObjectResult(deletedUser);
-        }
     }
 }
