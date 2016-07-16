@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace LunchService.Models
 {
@@ -10,6 +11,7 @@ namespace LunchService.Models
         [StringLength(int.MaxValue, MinimumLength = 1)]
         public string Name { get; set; }
 
+        [BindNever]
         public string ID { get; set; }
 
         public User(string name)

@@ -172,6 +172,21 @@ namespace APIEndpoint.Test
             Dispose(response);
         }
 
+        public async Task test_POST_user_with_ID_does_not_create_user_with_that_ID()
+        {
+            User requestedUser = new User("Ryan");
+            requestedUser.ID = "872387938984692";
+
+            HttpResponseMessage response = await client.Post(requestedUser);
+            string jsonContent = await response.Content.ReadAsStringAsync();
+
+            User observedUser = JsonConvert.DeserializeObject<User>(jsonContent);
+
+            Assert.NotEqual(requestedUser.ID, observedUser.ID);
+
+            Dispose(response);
+        }
+
         #endregion Tests
     }
 }

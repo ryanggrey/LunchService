@@ -104,7 +104,6 @@ namespace APIEndpoint.Test
             HttpResponseMessage postResponse = await client.Post(user);
             string postResponseJson = await postResponse.Content.ReadAsStringAsync();
             User postResponseUser = JsonConvert.DeserializeObject<User>(postResponseJson);
-            Console.WriteLine(postResponseUser.ID);
 
             HttpResponseMessage getResponse = await client.GetUser(postResponseUser.ID);
             HttpStatusCode expectedStatusCode = HttpStatusCode.OK;
