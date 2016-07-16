@@ -11,7 +11,7 @@ namespace LunchService.Controllers
     public class UsersController : Controller
     {
         private readonly IUserRepository users;
-        static BigInteger counter = new BigInteger(0);
+        private static BigInteger counter = new BigInteger(0);
 
         public UsersController(IUserRepository users)
         {
