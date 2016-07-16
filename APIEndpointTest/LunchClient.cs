@@ -53,6 +53,14 @@ namespace APIEndpoint.Rest
             return await Post(json);
         }
 
+        public async Task<HttpResponseMessage> GetUser(string id)
+        {
+            string userIDEndpoint = string.Format($"{endpoint}/{id}");
+            HttpResponseMessage response = await client.GetAsync(userIDEndpoint);
+
+            return response;
+        }
+
         public async Task<HttpResponseMessage> GetAllUsers()
         {
             HttpResponseMessage response = await client.GetAsync(endpoint);

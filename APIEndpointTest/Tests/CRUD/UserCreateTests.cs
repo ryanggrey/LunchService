@@ -63,10 +63,11 @@ namespace APIEndpoint.Test
         {
             User user = new User("Ryan");
             HttpResponseMessage response = await client.Post(user);
-            string expectedLocation = client.BaseAddress.ToString() + endpoint + "/0";
-            string observedLocation = response.Headers.Location.ToString();
+            string jsonContent = await response.Content.ReadAsStringAsync();
+            User createdUser = JsonConvert.DeserializeObject<User>(jsonContent);
 
-            Assert.Equal(expectedLocation, observedLocation);
+            string expectedLocation = client.BaseAddress.ToString() + endpoint + "/" + createdUser.ID;
+            string observedLocation = response.Headers.Location.ToString();
 
             Dispose(response);
         }

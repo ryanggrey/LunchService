@@ -4,41 +4,28 @@ namespace LunchService.Models
 {
     public class UserRepository : IUserRepository
     {
-        private readonly List<User> users = new List<User>();
+        private readonly IDictionary<string, User> users = new Dictionary<string, User>();
 
         public IEnumerable<User> GetAll()
         {
-            return new List<User>(users);
+            return new List<User>(users.Values);
         }
 
         public void Add(User user)
         {
-            users.Add(user);
+            users.Add(user.ID, user);
         }
 
-        private User Find(int id)
+        public User Get(string id)
         {
-            if(id >= users.Count)
-            {
-                return null;
-            }
-
             return users[id];
         }
 
-        public User Remove(int id)
+        public User Remove(string id)
         {
-            User removedUser = Find(id);
-            if (removedUser != null)
-            {
-                users.RemoveAt(id);
-            }
+            User removedUser = Get(id);
+            users.Remove(id);
             return removedUser;
-        }
-
-        public int IDOfUser(User user)
-        {
-            return users.IndexOf(user);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using LunchService.Models;
 using LunchService.Filters;
+using System.Numerics;
 
 namespace LunchService.Controllers
 {
@@ -10,6 +11,7 @@ namespace LunchService.Controllers
     public class UsersController : Controller
     {
         private readonly IUserRepository users;
+        static BigInteger counter = new BigInteger(0);
 
         public UsersController(IUserRepository users)
         {
@@ -24,9 +26,14 @@ namespace LunchService.Controllers
         }
 
         [HttpGet("{id}", Name = "GetUser")]
-        public IActionResult Get(int id)
+        public IActionResult Get(string id)
         {
-            throw new NotImplementedException();
+            return Ok(users.Get(id));
+        }
+
+        private string UniqueUserID()
+        {
+            return counter++.ToString();
         }
 
         // POST api/users
@@ -38,20 +45,22 @@ namespace LunchService.Controllers
                 return BadRequest("User required in request body.");
             }
 
-            users.Add(user);
-            int userID = users.IDOfUser(user);
-            if (userID == -1) {
+            user.ID = UniqueUserID();
+
+            if (string.IsNullOrEmpty(user.ID)) {
                 return StatusCode(500);
             }
 
+            users.Add(user);
+
             string routeName = "GetUser";
-            Object routeValues = new { id = userID };
+            Object routeValues = new { id = user.ID };
             return CreatedAtRoute(routeName, routeValues, user);
         }
 
         // DELETE api/users/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             User deletedUser = users.Remove(id);
             if (deletedUser == null) {

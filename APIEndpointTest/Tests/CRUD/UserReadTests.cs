@@ -97,6 +97,40 @@ namespace APIEndpoint.Test
             Dispose(response);
         }
 
+        [Fact]
+        public async Task test_when_user_exists_GET_id_returns_200()
+        {
+            User user = new User("Ryan");
+            HttpResponseMessage postResponse = await client.Post(user);
+            string postResponseJson = await postResponse.Content.ReadAsStringAsync();
+            User postResponseUser = JsonConvert.DeserializeObject<User>(postResponseJson);
+            Console.WriteLine(postResponseUser.ID);
+
+            HttpResponseMessage getResponse = await client.GetUser(postResponseUser.ID);
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK;
+            HttpStatusCode observedStatusCode = getResponse.StatusCode;
+
+            Assert.Equal(expectedStatusCode, observedStatusCode);
+        }
+
+        [Fact]
+        public async Task test_GET_returns_user_by_id()
+        {
+            User user = new User("Ryan");
+            HttpResponseMessage postResponse = await client.Post(user);
+            string postResponseJson = await postResponse.Content.ReadAsStringAsync();
+            User postResponseUser = JsonConvert.DeserializeObject<User>(postResponseJson);
+
+            HttpResponseMessage getResponse = await client.GetUser(postResponseUser.ID);
+            string getResponseJson = await getResponse.Content.ReadAsStringAsync();
+            User getResponseUser = JsonConvert.DeserializeObject<User>(getResponseJson);
+
+            User expectedUser = postResponseUser;
+            User observedUser = getResponseUser;
+
+            Assert.Equal(expectedUser, observedUser);
+        }
+
         #endregion Tests
     }
 }

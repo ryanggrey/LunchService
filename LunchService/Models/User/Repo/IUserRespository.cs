@@ -6,7 +6,7 @@ namespace LunchService.Models
     {
         void Add(User user);
         IEnumerable<User> GetAll();
-        User Remove(int id);
-        int IDOfUser(User user);
+        User Get(string id);
+        User Remove(string id);
     }
 }

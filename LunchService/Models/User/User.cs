@@ -1,12 +1,16 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace LunchService.Models
 {
     public class User
     {
+
         [Required]
         [StringLength(int.MaxValue, MinimumLength = 1)]
         public string Name { get; set; }
+
+        public string ID { get; set; }
 
         public User(string name)
         {
@@ -38,6 +42,11 @@ namespace LunchService.Models
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }
