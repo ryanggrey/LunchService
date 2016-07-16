@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using LunchService;
-using System.Threading;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Hosting;
 using LunchService.Hosting;
 using LunchService.Models;
 using Newtonsoft.Json;
@@ -22,25 +17,17 @@ namespace APIEndpoint.Test
         private const string endpoint = "Users";
         private LunchClient client = new LunchClient(endpoint);
         private Host host = new Host();
-        private readonly List<IDisposable> disposables = new List<IDisposable>();
 
         public UserReadTests()
         {
             host.StartOnBackgroundThread();
-            disposables.Add(client);
         }
 
         // automatically called at end of each test
         public void Dispose()
         {
+            client.Dispose();
             host.Stop();
-            disposables.ForEach(disposable => disposable.Dispose());
-        }
-
-        // call to queue items for disposal at end of each test
-        public void Dispose(params IDisposable[] toDispose)
-        {
-            disposables.AddRange(toDispose);
         }
 
         #region Tests
@@ -57,7 +44,8 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
 
-            Dispose(restClient, response);
+            restClient.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -69,7 +57,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Theory]
@@ -94,7 +82,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedUsers, observedUsers);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -110,6 +98,9 @@ namespace APIEndpoint.Test
             HttpStatusCode observedStatusCode = getResponse.StatusCode;
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
+
+            postResponse.Dispose();
+            getResponse.Dispose();
         }
 
         [Fact]
@@ -128,6 +119,9 @@ namespace APIEndpoint.Test
             User observedUser = getResponseUser;
 
             Assert.Equal(expectedUser, observedUser);
+
+            postResponse.Dispose();
+            getResponse.Dispose();
         }
 
         #endregion Tests

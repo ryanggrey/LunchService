@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using LunchService;
-using System.Threading;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Hosting;
 using LunchService.Hosting;
 using LunchService.Models;
 using Newtonsoft.Json;
@@ -22,25 +17,17 @@ namespace APIEndpoint.Test
         private const string endpoint = "Users";
         private LunchClient client = new LunchClient(endpoint);
         private Host host = new Host();
-        private readonly List<IDisposable> disposables = new List<IDisposable>();
 
         public UserCreateTests()
         {
             host.StartOnBackgroundThread();
-            disposables.Add(client);
         }
 
         // automatically called at end of each test
         public void Dispose()
         {
             host.Stop();
-            disposables.ForEach(disposable => disposable.Dispose());
-        }
-
-        // call to queue items for disposal at end of each test
-        public void Dispose(params IDisposable[] toDispose)
-        {
-            disposables.AddRange(toDispose);
+            client.Dispose();
         }
 
         #region Tests
@@ -55,7 +42,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -69,7 +56,7 @@ namespace APIEndpoint.Test
             string expectedLocation = client.BaseAddress.ToString() + endpoint + "/" + createdUser.ID;
             string observedLocation = response.Headers.Location.ToString();
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -83,7 +70,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedUser, observedUser);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -95,7 +82,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -107,7 +94,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedResponseContent, observedResponseContent);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -124,7 +111,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -141,7 +128,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedResponseContent, observedResponseContent);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -155,7 +142,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedStatusCode, observedStatusCode);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         [Fact]
@@ -169,7 +156,7 @@ namespace APIEndpoint.Test
 
             Assert.Equal(expectedResponseContent, observedResponseContent);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         public async Task test_POST_user_with_ID_does_not_create_user_with_that_ID()
@@ -184,7 +171,7 @@ namespace APIEndpoint.Test
 
             Assert.NotEqual(requestedUser.ID, observedUser.ID);
 
-            Dispose(response);
+            response.Dispose();
         }
 
         #endregion Tests
