@@ -9,5 +9,4 @@ dependencies:
     - dotnet restore
 test:
   override:
-    - dotnet test ./UnitTest/ -xml "$CIRCLE_TEST_REPORTS"/xunit/unit-test-results.xml
-    - dotnet test ./APIEndpointTest/ -xml "$CIRCLE_TEST_REPORTS"/xunit/api-endpoint-test-results.xml
+    - ./test "$CIRCLE_TEST_REPORTS"/xunit
