@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-set -eu
+set -e
 
 export ASPNETCORE_ENVIRONMENT=Development
 
-base_dir=$(pwd)
-endpoint_dir="$base_dir"/APIEndpointTest
-unit_dir="$base_dir"/UnitTest
+output_base="${1:-test-results}"
 
-cd "$endpoint_dir"
-dotnet test
+run_tests()
+{
+  tests="$1"
+  output_dir="$2"
+  base_dir=$(pwd)
+  tests_dir="$base_dir/$tests"
+  dotnet test "$tests_dir" -xml "$output_dir/$tests"-results.xml
+}
 
-cd "$unit_dir"
-dotnet test
+run_tests APIEndpointTest "$output_base"
+run_tests UnitTest "$output_base"
