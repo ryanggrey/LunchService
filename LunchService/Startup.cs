@@ -30,12 +30,21 @@ namespace LunchService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder appBuilder, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            Configure(loggerFactory);
+            Configure(appBuilder);
+        }
+
+        private void Configure(ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+        }
 
-            app.UseMvc();
+        private void Configure(IApplicationBuilder appBuilder)
+        {
+            appBuilder.UseMvc();
         }
     }
 }
