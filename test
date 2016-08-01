@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+base_dir=$(pwd)
+endpoint_dir="$base_dir"/APIEndpointTest
+unit_dir="$base_dir"/UnitTest
+
+cd "$endpoint_dir"
+dotnet test
+
+cd "$unit_dir"
+dotnet test

@@ -1,45 +1,31 @@
-using System;
 using System.Collections.Generic;
 
 namespace LunchService.Models
 {
-    public class UserRepository : IUserRepository
+  public class UserRepository : IUserRepository
+  {
+    private readonly IDictionary<string, User> users = new Dictionary<string, User>();
+
+    public IEnumerable<User> GetAll()
     {
-        private readonly List<User> users = new List<User>();
-
-        public IEnumerable<User> GetAll()
-        {
-            return new List<User>(users);
-        }
-
-        public void Add(User user)
-        {
-            users.Add(user);
-        }
-
-        private User Find(int id)
-        {
-            if(id >= users.Count)
-            {
-                return null;
-            }
-
-            return users[id];
-        }
-
-        public User Remove(int id)
-        {
-            User removedUser = Find(id);
-            if (removedUser != null)
-            {
-                users.RemoveAt(id);
-            }
-            return removedUser;
-        }
-
-        public int IDOfUser(User user)
-        {
-            return users.IndexOf(user);
-        }
+      return new List<User>(users.Values);
     }
+
+    public void Add(User user)
+    {
+      users.Add(user.ID, user);
+    }
+
+    public User Get(string id)
+    {
+      return users[id];
+    }
+
+    public User Remove(string id)
+    {
+      User removedUser = Get(id);
+      users.Remove(id);
+      return removedUser;
+    }
+  }
 }

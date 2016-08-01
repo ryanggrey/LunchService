@@ -30,6 +30,6 @@
     }
   },
   "tooling": {
-    "defaultNamespace": "UnitTest"
+    "defaultNamespace": "APIEndpointTest"
   }
 }
