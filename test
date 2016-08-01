@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export ASPNETCORE_ENVIRONMENT=Development 
+
 base_dir=$(pwd)
 endpoint_dir="$base_dir"/APIEndpointTest
 unit_dir="$base_dir"/UnitTest
